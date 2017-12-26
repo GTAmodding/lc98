@@ -104,7 +104,7 @@ patchIII10(void)
 	Nop(0x52661B, 2);
 
 	// if rw world is created, we were loaded by mss
-	if(AddressByVersion<void*>(0x726768, 0x726768, 0x7368A8, 0x8100B8, 0x8100C0, 0x80F0C0))
+	if(*AddressByVersion<void**>(0x726768, 0x726768, 0x7368A8, 0x8100B8, 0x8100C0, 0x80F0C0))
 		latePatches();
 
 	InterceptCall(&RsEventHandler_orig, delayedPatches, 0x58275E);
@@ -120,7 +120,7 @@ void
 patchVC10(void)
 {
 #ifdef VC
-	if(AddressByVersion<void*>(0x726768, 0x726768, 0x7368A8, 0x8100B8, 0x8100C0, 0x80F0C0))
+	if(*AddressByVersion<void**>(0x726768, 0x726768, 0x7368A8, 0x8100B8, 0x8100C0, 0x80F0C0))
 		latePatches();
 
 	InterceptCall(&RsEventHandler_orig, delayedPatches, 0x5FFAFE);
