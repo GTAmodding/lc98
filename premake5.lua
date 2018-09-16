@@ -34,7 +34,7 @@ project "lc98"
 		symbols "On"
 		debugdir "C:/Users/aap/games/gtavc"
 		debugcommand "C:/Users/aap/games/gtavc/gta_vc.exe"
-		postbuildcommands "copy /y \"$(TargetPath)\" \"C:\\Users\\aap\\games\\gtavc\\dlls\\vc84.dll\""
+		postbuildcommands "copy /y \"$(TargetPath)\" \"C:\\Users\\aap\\games\\gtavc\\plugins\\vc84.dll\""
 
 	filter "configurations:ReleaseVC"
 		defines { "NDEBUG", "VC" }
@@ -42,4 +42,4 @@ project "lc98"
 		flags { "StaticRuntime" }
 		debugdir "C:/Users/aap/games/gtavc"
 		debugcommand "C:/Users/aap/games/gtavc/gta_vc.exe"
-		postbuildcommands "copy /y \"$(TargetPath)\" \"C:\\Users\\aap\\games\\gtavc\\dlls\\vc84.dll\""
+		postbuildcommands "copy /y \"$(TargetPath)\" \"C:\\Users\\aap\\games\\gtavc\\plugins\\vc84.dll\""

@@ -60,17 +60,17 @@ latePatches(void)
 		if(getparam("worldPipeSwitch") == -1)
 			setparam("worldPipeSwitch", 2);
 		if(getparam("carPipeSwitch") == -1)
-			setparam("carPipeSwitch", 2);
+			setparam("carPipeSwitch", gametarget == LCS ? 2 : 3);
 		if(getparam("trailsSwitch") == -1)
 			setparam("trailsSwitch", 1);
 
 		if(gametarget == VCS){
 			if(getparam("radiosity") == -1)
 				setparam("radiosity", 1);
-			if(getparamf("leedsWorldAmbTweak") < 0)
-				setparamf("leedsWorldAmbTweak", 0.5f);
-			if(getparamf("leedsWorldEmissTweak") < 0)
-				setparamf("leedsWorldEmissTweak", 0.1f);
+			if(getparamf("leedsWorldPrelightTweakMult") < 0)
+				setparamf("leedsWorldPrelightTweakMult", 0.5f);
+			if(getparamf("leedsWorldPrelightTweakAdd") < 0)
+				setparamf("leedsWorldPrelightTweakAdd", 0.1f);
 		}
 		curAmbMultRed = (float*)getptr("currentAmbientMultRed");
 		curAmbMultGreen = (float*)getptr("currentAmbientMultGreen");
@@ -107,12 +107,18 @@ patchIII10(void)
 	if(*AddressByVersion<void**>(0x726768, 0x726768, 0x7368A8, 0x8100B8, 0x8100C0, 0x80F0C0))
 		latePatches();
 
+	// don't have light "shadows" be affected by sprite brightness
+	static float one = 1.0f;
+	Patch(0x4FABFA + 2, &one);
+	Patch(0x4FAC6B + 2, &one);
+	Patch(0x4FACB1 + 2, &one);
+
 	InterceptCall(&RsEventHandler_orig, delayedPatches, 0x58275E);
 	Patch(0x52127E + 1, "lc98_carcols.dat");
 	patchtimecycle();
 
 #else
-	errorMessage("This version only works with GTA III");
+	errorMessage("This version only works with GTA VC");
 #endif
 }
 
@@ -129,8 +135,17 @@ patchVC10(void)
 	// Always use _bl lighting
 	Nop(0x580107, 2);
 	Nop(0x580172, 2);
+
+	// don't have light "shadows" be affected by sprite brightness
+	static float one = 1.0f;
+	Patch(0x541D1E + 2, &one);
+	Patch(0x541D8F + 2, &one);
+	Patch(0x541DD5 + 2, &one);
+
+	if(gametarget == VCS)
+		Nop(0x4A6570, 5);	// disable clouds (don't disable all actually!)
 #else
-	errorMessage("This version only works with GTA VC");
+	errorMessage("This version only works with GTA III");
 #endif
 }
 

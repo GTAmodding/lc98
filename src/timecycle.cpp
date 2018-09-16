@@ -1,4 +1,5 @@
 #include "lc98.h"
+#include <assert.h>
 
 #ifdef III
 
@@ -167,8 +168,8 @@ uint8   (*CTimeCycle::m_nFluffyCloudsTopRed)[NUMWEATHERS] = (uint8(*)[NUMWEATHER
 uint8   (*CTimeCycle::m_nFluffyCloudsTopGreen)[NUMWEATHERS] = (uint8(*)[NUMWEATHERS])0x813F70;
 uint8   (*CTimeCycle::m_nFluffyCloudsTopBlue)[NUMWEATHERS] = (uint8(*)[NUMWEATHERS])0x938980;
 uint8   (*CTimeCycle::m_nFluffyCloudsBottomRed)[NUMWEATHERS] = (uint8(*)[NUMWEATHERS])0x7D3D98;
-uint8   (*CTimeCycle::m_nFluffyCloudsBottomGreen)[NUMWEATHERS] = (uint8(*)[NUMWEATHERS])0x7D9630;
-uint8   (*CTimeCycle::m_nFluffyCloudsBottomBlue)[NUMWEATHERS] = (uint8(*)[NUMWEATHERS])0x7FFE38;
+uint8   (*CTimeCycle::m_nFluffyCloudsBottomGreen)[NUMWEATHERS] = (uint8(*)[NUMWEATHERS])0x7FFE38;
+uint8   (*CTimeCycle::m_nFluffyCloudsBottomBlue)[NUMWEATHERS] = (uint8(*)[NUMWEATHERS])0x7D9630;
 
 uint8 (*CTimeCycle::m_fBlurRed)[NUMWEATHERS] = (uint8(*)[NUMWEATHERS])0x94B790;
 uint8 (*CTimeCycle::m_fBlurGreen)[NUMWEATHERS] = (uint8(*)[NUMWEATHERS])0x8621A0;
@@ -509,7 +510,10 @@ CTimeCycle::Initialise_VCS(void)
 	for(ww = 0; ww < 8; ww++)
 		for(h = 0; h < NUMHOURS; h++){
 			w = ww;
+			// overwrite sunny with ultrasunny
 			if(w == 7) w = 0;
+
+			assert(w < NUMWEATHERS);
 
 			li = 0;
 again:
@@ -557,6 +561,11 @@ again:
 				&waterR, &waterG, &waterB, &waterA,
 			        &blurAlpha, &blurOffset);
 
+			// Some sanity checks
+
+			// this causes byte overflow and disco lights
+			if(sprBght > 1.0f) sprBght = 1.0f;
+
 #ifdef III
 			m_nAmbientMultRed[h][w] = ambR;
 			m_nAmbientMultGreen[h][w] = ambG;
@@ -573,9 +582,9 @@ again:
 			m_nAmbientRed[h][w] = ambR;
 			m_nAmbientGreen[h][w] = ambG;
 			m_nAmbientBlue[h][w] = ambB;
-			m_nAmbientRed_Obj[h][w] = xxxR;
-			m_nAmbientGreen_Obj[h][w] = xxxG;
-			m_nAmbientBlue_Obj[h][w] = xxxB;
+			m_nAmbientRed_Obj[h][w] = xxxR;	    // unused
+			m_nAmbientGreen_Obj[h][w] = xxxG;   // unused
+			m_nAmbientBlue_Obj[h][w] = xxxB;    // unused
 
 			m_nAmbientRed_Bl[h][w] = emissR;
 			m_nAmbientGreen_Bl[h][w] = emissG;
